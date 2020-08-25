@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "B4+gqp7M8f+/DCjD1jPoEL/6YH0I/b/yuPs+bMpFADisgd+EpmwdHNTnu6gbMZmcOEeLQDc39RTkkR1Ybkhh8g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\thelittlecitizen16\\source\\repos\\MAS\\AgentsProject\\AgentsProject.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\thelittlecitizen16\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\thelittlecitizen16\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
