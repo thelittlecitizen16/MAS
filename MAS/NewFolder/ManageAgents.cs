@@ -8,26 +8,19 @@ namespace MAS.NewFolder
 {
     public class ManageAgents
     {
-        public List<IAgent> allAgents { get; private set; }
+        public List<IAgent> AllAgents { get; private set; }
 
         public ManageAgents()
         {
-            allAgents = new List<IAgent>();
+            AllAgents = new List<IAgent>();
             AddAllAgents();
-        }
-
-        public void RegisterAgent(IAgent agent)
-        {
-            allAgents.Add(agent);
         }
 
         private void AddAllAgents()
         {
-            allAgents.Add(new MamasAgent());
-            allAgents.Add(new BamasAgent());
-            allAgents.Add(new LaLaLandAgent());
+            AllAgents.Add(new MamasAgent());
+            AllAgents.Add(new BamasAgent());
+            AllAgents.Add(new LaLaLandAgent());
         }
-
-
     }
 }

@@ -4,7 +4,9 @@ using System.Text;
 
 namespace MAS.Products.Interfaces
 {
-    interface IProduct
+    public interface IProduct
     {
+        string Name { get; }
+        string Description { get; }
     }
 }
