@@ -6,23 +6,23 @@ using System.Text;
 
 namespace AgentsProject.Agents
 {
-    public class MamasAgent : IAgent
+    public class LaLaLandAgent : IAgent
     {
         public string Name { get; private set; }
         private BasicAlgorithm _algorithm;
-        public MamasAgent()
+        public LaLaLandAgent()
         {
             _algorithm = new BasicAlgorithm();
-            Name = "Mams Empire";
+            Name = "La La Land";
         }
         public bool EnterAuction(string productName, double startPrice, double priceJump, List<IAgent> allAgentsInAuction)
         {
-           return _algorithm.EnterAuction(productName, startPrice, priceJump, allAgentsInAuction);
+            return _algorithm.EnterAuction(productName, startPrice, priceJump, allAgentsInAuction);
         }
 
         public double NewOffer(string agentName, double offerPrice)
         {
-            return _algorithm.NewOffer(agentName , offerPrice);
+            return _algorithm.NewOffer(agentName, offerPrice);
         }
 
         public double OfferLastChance(string agentName, double offerPrice)
