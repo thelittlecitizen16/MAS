@@ -4,7 +4,8 @@ using System.Text;
 
 namespace MAS.Products.Interfaces
 {
-    interface IOffice
+    public interface IOffice : IProduct
     {
+        int NumberOfRooms { get; }
     }
 }
