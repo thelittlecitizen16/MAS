@@ -20,6 +20,10 @@ namespace AgentsProject.Agents
             return _algorithm.EnterAuction(productName, startPrice, priceJump);
         }
 
+        public double FirstOffer()
+        {
+            return _algorithm.FirstOffer();
+        }
         public double NewOffer(string agentName, double offerPrice)
         {
             return _algorithm.NewOffer(agentName, offerPrice);

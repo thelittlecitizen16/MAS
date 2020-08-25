@@ -33,5 +33,13 @@ namespace MAS
                 });
             }  
         }
+
+        public void StartAuction()
+        {
+            Console.WriteLine($"the auction {_auction.Name} start now-");
+            Console.WriteLine($" the product is {_auction.Product} the start price is {_auction.StartPrice}");
+        }
+
+
     }
 }
