@@ -6,6 +6,7 @@ namespace AgentsProject.Interfaces
 {
     public interface IAgent
     {
+         string Name { get; }
         bool EnterAuction(string productName, double startPrice, double priceJump, List<IAgent> allAgentsInAuction);
         double NewOffer(string agentName, double offerPrice);
         double OfferLastChance(string agentName, double offerPrice);
