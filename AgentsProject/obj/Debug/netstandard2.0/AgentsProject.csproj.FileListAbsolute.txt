@@ -1,9 +1,0 @@
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\bin\Debug\netstandard2.0\AgentsProject.deps.json
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\bin\Debug\netstandard2.0\AgentsProject.dll
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\bin\Debug\netstandard2.0\AgentsProject.pdb
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\obj\Debug\netstandard2.0\AgentsProject.csprojAssemblyReference.cache
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\obj\Debug\netstandard2.0\AgentsProject.AssemblyInfoInputs.cache
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\obj\Debug\netstandard2.0\AgentsProject.AssemblyInfo.cs
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\obj\Debug\netstandard2.0\AgentsProject.csproj.CoreCompileInputs.cache
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\obj\Debug\netstandard2.0\AgentsProject.dll
-C:\Users\thelittlecitizen16\source\repos\MAS\AgentsProject\obj\Debug\netstandard2.0\AgentsProject.pdb

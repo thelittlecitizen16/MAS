@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MAS.NewFolder;
+using System;
+using System.Linq;
 
 namespace MAS
 {
@@ -6,7 +8,12 @@ namespace MAS
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ManageProducts manageProducts = new ManageProducts();
+            Auction auction = new Auction("a", DateTime.Now, TimeSpan.FromSeconds(10), manageProducts.AllProducts.First(), 200, 100);
+            ManageAuction manageAuction = new ManageAuction(auction);
+            manageAuction.SendAboutNewAuction();
+
+            Console.ReadLine();
         }
     }
 }
