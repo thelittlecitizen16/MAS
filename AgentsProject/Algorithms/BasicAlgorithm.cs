@@ -12,12 +12,11 @@ namespace AgentsProject.Algorithms
         private double _priceJump;
         private List<IAgent> _allAgentsInAuction;
 
-        public bool EnterAuction(string productName, double startPrice, double priceJump, List<IAgent> allAgentsInAuction)
+        public bool EnterAuction(string productName, double startPrice, double priceJump)
         {
             _productName = productName;
             _startPrice = startPrice;
             _priceJump = priceJump;
-            _allAgentsInAuction = allAgentsInAuction;
             return true;
         }
 

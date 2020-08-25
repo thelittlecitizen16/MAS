@@ -11,12 +11,13 @@ namespace MAS
     {
         private Auction _auction;
         private ManageAgents _manageAgents;
-        private List<IAgent> agentInAuction;
+        private List<IAgent> _agentInAuction;
 
         public ManageAuction(Auction auction)
         {
             _auction = auction;
             _manageAgents = new ManageAgents();
+            _agentInAuction = new List<IAgent>();
         }
 
         public void SendAboutNewAuction()
@@ -27,7 +28,7 @@ namespace MAS
                 {
                     if (agent.EnterAuction(_auction.Name, _auction.StartPrice, _auction.PriceJump))
                     {
-                        agentInAuction.Add(agent);
+                        _agentInAuction.Add(agent);
                     }                   
                 });
             }  

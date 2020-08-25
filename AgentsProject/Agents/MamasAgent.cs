@@ -15,9 +15,9 @@ namespace AgentsProject.Agents
             _algorithm = new BasicAlgorithm();
             Name = "Mams Empire";
         }
-        public bool EnterAuction(string productName, double startPrice, double priceJump, List<IAgent> allAgentsInAuction)
+        public bool EnterAuction(string productName, double startPrice, double priceJump)
         {
-           return _algorithm.EnterAuction(productName, startPrice, priceJump, allAgentsInAuction);
+           return _algorithm.EnterAuction(productName, startPrice, priceJump);
         }
 
         public double NewOffer(string agentName, double offerPrice)
