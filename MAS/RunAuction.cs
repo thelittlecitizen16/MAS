@@ -52,7 +52,8 @@ namespace MAS
             List<Tuple<double?, IAgent>> allResults = _manageAuction.SendAgentIfWantToAddFirstOffer();
 
             Print(allResults);
-            _manageAuction.CheckOfferFirst(allResults);
+            _manageAuction.AddFirstOffer(allResults);
+            _manageAuction.CheckOffer(allResults);
 
             RunTimeAuction();
 

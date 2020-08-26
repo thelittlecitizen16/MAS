@@ -62,6 +62,7 @@ namespace MAS
             var parameter = new object[] { Auction.ID };
             return SendAgentAboutOffer(true,parameter);
         }
+
         public List<Tuple<double?, IAgent>> SendAgentIfWantToAddNewOffer()
         {
             var parameters = new object[] { Auction.ID, _lastAgentOffer.Name , _lastOfferPrice};
@@ -93,19 +94,11 @@ namespace MAS
 
             return allResults;
         }
-        public void CheckOfferFirst(List<Tuple<double?, IAgent>> allResults)
+
+        public void AddFirstOffer(List<Tuple<double?, IAgent>> allResults)
         {
             _lastAgentOffer = allResults.First().Item2;
             _lastOfferPrice = allResults.First().Item1.Value;
-
-            foreach (var result in allResults)
-            {
-                if (_lastOfferPrice < result.Item1)
-                {
-                    _lastOfferPrice = result.Item1.Value;
-                    _lastAgentOffer = result.Item2;
-                }
-            }
         }
         public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
         {
