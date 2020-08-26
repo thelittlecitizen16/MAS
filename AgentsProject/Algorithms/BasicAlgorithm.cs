@@ -20,6 +20,11 @@ namespace AgentsProject.Algorithms
             return true;
         }
 
+        public double FirstOffer()
+        {
+            return _startPrice + _priceJump;
+        }
+
         public double NewOffer(string agentName, double offerPrice)
         {
             if (offerPrice < 500)

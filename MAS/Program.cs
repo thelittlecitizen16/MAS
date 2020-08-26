@@ -1,6 +1,8 @@
 ﻿using MAS.NewFolder;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MAS
 {
@@ -11,9 +13,11 @@ namespace MAS
             ManageProducts manageProducts = new ManageProducts();
             Auction auction = new Auction("a", DateTime.Now, TimeSpan.FromSeconds(10), manageProducts.AllProducts.First(), 200, 100);
             ManageAuction manageAuction = new ManageAuction(auction);
-            manageAuction.SendAboutNewAuction();
-
+            RunAuction runAuction = new RunAuction(manageAuction);
+            runAuction.SendAboutNewAuction();
+            manageAuction.SendIfWantToAddFirstOffer();
             Console.ReadLine();
         }
+       
     }
 }

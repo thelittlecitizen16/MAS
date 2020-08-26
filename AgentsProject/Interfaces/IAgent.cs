@@ -8,7 +8,8 @@ namespace AgentsProject.Interfaces
     {
          string Name { get; }
         bool EnterAuction(string productName, double startPrice, double priceJump);
-        double NewOffer(string agentName, double offerPrice);
-        double OfferLastChance(string agentName, double offerPrice);
+        Tuple<double, IAgent> FirstOffer();
+        Tuple<double, IAgent> NewOffer(string agentName, double offerPrice);
+        Tuple<double, IAgent> OfferLastChance(string agentName, double offerPrice);
     }
 }

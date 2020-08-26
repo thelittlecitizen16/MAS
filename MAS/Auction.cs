@@ -15,7 +15,6 @@ namespace MAS
         public IProduct Product { get; private set; }
         public double StartPrice { get; private set; }
         public double PriceJump { get; private set; }
-        public event Action<IAgent> StartAuction;
 
 
         public Auction(string name, DateTime startTime, TimeSpan waitWithoutOffer, IProduct product, double startPrice, double priceJump)
@@ -29,10 +28,7 @@ namespace MAS
             PriceJump = priceJump;
         }
 
-        public void Subscribe(IAgent agent)
-        {
-            //StartAuction += 
-        }
+     
 
        
 

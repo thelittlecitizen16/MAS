@@ -20,19 +20,19 @@ namespace AgentsProject.Agents
            return _algorithm.EnterAuction(productName, startPrice, priceJump);
         }
 
-        public double FirstOffer()
+        public Tuple<double, IAgent> FirstOffer()
         {
-            return _algorithm.FirstOffer();
+            return new Tuple<double, IAgent>(_algorithm.FirstOffer(), this);
         }
 
-        public double NewOffer(string agentName, double offerPrice)
+        public Tuple<double, IAgent> NewOffer(string agentName, double offerPrice)
         {
-            return _algorithm.NewOffer(agentName , offerPrice);
+            return new Tuple<double, IAgent>(_algorithm.NewOffer(agentName, offerPrice), this);
         }
 
-        public double OfferLastChance(string agentName, double offerPrice)
+        public Tuple<double, IAgent> OfferLastChance(string agentName, double offerPrice)
         {
-            return _algorithm.OfferLastChance(agentName, offerPrice);
+            return new Tuple<double, IAgent>(_algorithm.OfferLastChance(agentName, offerPrice), this);
         }
     }
 }
