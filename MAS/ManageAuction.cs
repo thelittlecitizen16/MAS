@@ -1,5 +1,4 @@
 ﻿using AgentsProject.Interfaces;
-using MAS.NewFolder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,8 +117,10 @@ namespace MAS
         }
         public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
         {
+            allResults = allResults.Where(r => r != null).ToList();
             foreach (var result in allResults)
             {
+                
                 if (result.Item1.HasValue)
                 {
                     if (_lastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value))

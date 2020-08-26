@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MAS.NewFolder
+namespace MAS.MasDB
 {
     public class ManageProducts
     {

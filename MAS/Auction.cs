@@ -19,7 +19,7 @@ namespace MAS
 
         public Auction(string name, DateTime startTime, TimeSpan waitWithoutOffer, IProduct product, double startPrice, double priceJump)
         {
-            ID = new Guid();
+            ID = Guid.NewGuid();
             Name = name;
             StartPrice = startPrice;
             WaitWithoutOffer = waitWithoutOffer;

@@ -1,6 +1,7 @@
 ﻿using AgentsProject.Interfaces;
 using Common;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,16 +9,16 @@ namespace AgentsProject.Algorithms
 {
     public class BasicAlgorithm : IAlgorithm
     {
-        private Dictionary<Guid, AuctionDeatiels> _auctionsDeatiels;
+        private ConcurrentDictionary<Guid, AuctionDeatiels> _auctionsDeatiels;
 
         public BasicAlgorithm()
         {
-            _auctionsDeatiels = new Dictionary<Guid, AuctionDeatiels>();
+            _auctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
         }
 
         public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
-            _auctionsDeatiels.Add(auctionID, auctionDeatiels);
+            _auctionsDeatiels.TryAdd(auctionID, auctionDeatiels);
             return true;
         }
 

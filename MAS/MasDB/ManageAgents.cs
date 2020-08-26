@@ -4,7 +4,7 @@ using System.Text;
 using AgentsProject.Agents;
 using AgentsProject.Interfaces;
 
-namespace MAS.NewFolder
+namespace MAS.MasDB
 {
     public class ManageAgents
     {
