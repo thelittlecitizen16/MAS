@@ -24,9 +24,9 @@ namespace AgentsProject.Agents
             return  new Tuple<double, IAgent>( _algorithm.FirstOffer() , this);
         }
 
-        public Tuple<double, IAgent> NewOffer(string agentName, double offerPrice)
+        public Tuple<double?, IAgent> NewOffer(string agentName, double offerPrice)
         {
-            return new Tuple<double, IAgent>(_algorithm.NewOffer(agentName, offerPrice), this);
+            return new Tuple<double?, IAgent>(_algorithm.NewOffer(agentName, offerPrice), this);
         }
 
         public Tuple<double, IAgent> OfferLastChance(string agentName, double offerPrice)

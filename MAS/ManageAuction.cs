@@ -15,7 +15,7 @@ namespace MAS
         private IAgent _lastAgentOffer;
         private double _lastOfferPrice;
         private event Func<Tuple<double, IAgent>> FirstOffer;
-        private event Func<string, double, Tuple<double, IAgent>> NewOffer;
+        private event Func<string, double, Tuple<double?, IAgent>> NewOffer;
         private event Func<string, double, Tuple<double, IAgent>> LastOffer;
 
         public ManageAuction(Auction auction)
@@ -32,7 +32,7 @@ namespace MAS
         public void StartAuction()
         {
             Console.WriteLine($"the auction {Auction.Name} start now-");
-            Console.WriteLine($" the product is {Auction.Product} the start price is {Auction.StartPrice}");
+            Console.WriteLine($" the product is {Auction.Product.Name} the start price is {Auction.StartPrice}");
         }
 
         private void SendIfWantToAddFirstOffer(IAgent agent)
@@ -57,22 +57,24 @@ namespace MAS
 
         }
 
-        public void SendIfWantToAddFirstOffer()
+        public List<Tuple<double, IAgent>> SendAgentIfWantToAddFirstOffer()
         {
+            List<Task> tasks = new List<Task>(); ;
             List<Tuple<double, IAgent>> allResults = new List<Tuple<double, IAgent>>();
-            Thread.Sleep(1000);
-
-            for (int i = 0; i <= FirstOffer.GetInvocationList().Length; i++)
+            var b = FirstOffer.GetInvocationList();
+            foreach (var c in b)
             {
-                Task.Factory.StartNew(() =>
+                tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    var outputMsg = FirstOffer.GetInvocationList()[i];
+                    var outputMsg = c;
                     Tuple<double, IAgent> tuple = (Tuple<double, IAgent>)outputMsg?.DynamicInvoke();
                     allResults.Add(tuple);
                     //allResults.Add(outputMsg?.DynamicInvoke());
-                    Console.WriteLine(tuple.Item1.ToString(), tuple.Item2.Name); 
-                });
+                }));
             }
+            Task.WaitAll(tasks.ToArray());
+
+            return allResults;
             //FirstOffer.GetInvocationList().ToList().ForEach(x =>
             //Console.WriteLine(x.Method.ReturnType));
             //Array.ForEach(FirstOffer.GetInvocationList(), x =>
@@ -80,6 +82,64 @@ namespace MAS
 
             //    Console.WriteLine(x.Method.ReturnType);
             //});
+        }
+        public List<Tuple<double?, IAgent>> SendAgentIfWantToAddNewOffer()
+        {
+            List<Task> tasks = new List<Task>(); 
+
+            List<Tuple<double?, IAgent>> allResults = new List<Tuple<double?, IAgent>>();
+
+            Thread.Sleep(1000);
+
+            var b = NewOffer.GetInvocationList();
+
+
+            foreach (var c in b)
+            {
+                tasks.Add(Task.Factory.StartNew(() =>
+                {
+                    // var outputMsg = NewOffer.GetInvocationList()[i];
+                    var name = _lastAgentOffer.Name;
+                    var price = _lastOfferPrice;
+                    object args = new Object[] { name, price };
+                Tuple<double?, IAgent> tuple = (Tuple<double?, IAgent>)c?.DynamicInvoke(name, price);
+                    allResults.Add(tuple);
+                }));
+            }
+            Task.WaitAll(tasks.ToArray());
+
+            return allResults;
+        }
+
+        public void CheckOfferFirst(List<Tuple<double, IAgent>> allResults)
+        {
+            _lastAgentOffer = allResults.First().Item2;
+            _lastOfferPrice = allResults.First().Item1;
+
+            foreach (var result in allResults)
+            {
+                if (_lastOfferPrice < result.Item1)
+                {
+                    _lastOfferPrice = result.Item1;
+                    _lastAgentOffer = result.Item2;
+                }
+            }
+        }
+        public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
+        {
+            
+            foreach (var result in allResults)
+            {
+                if (result.Item1.HasValue)
+                {
+                    if (_lastOfferPrice < result.Item1)
+                    {
+                        _lastOfferPrice = result.Item1.Value;
+                        _lastAgentOffer = result.Item2;
+                    }
+                }
+                
+            }
         }
     }
 }

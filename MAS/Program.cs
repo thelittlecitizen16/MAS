@@ -14,8 +14,7 @@ namespace MAS
             Auction auction = new Auction("a", DateTime.Now, TimeSpan.FromSeconds(10), manageProducts.AllProducts.First(), 200, 100);
             ManageAuction manageAuction = new ManageAuction(auction);
             RunAuction runAuction = new RunAuction(manageAuction);
-            runAuction.SendAboutNewAuction();
-            manageAuction.SendIfWantToAddFirstOffer();
+            runAuction.Run();
             Console.ReadLine();
         }
        
