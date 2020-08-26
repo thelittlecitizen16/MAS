@@ -10,6 +10,7 @@ namespace AgentsProject.Agents
     {
         public string Name { get; private set; }
         private BasicAlgorithm _algorithm;
+
         public BamasAgent()
         {
             _algorithm = new BasicAlgorithm();

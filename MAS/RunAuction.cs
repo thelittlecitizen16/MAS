@@ -76,7 +76,6 @@ namespace MAS
             }
         }
 
-
         private void Print(List<Tuple<double, IAgent>> results)
         {
             foreach (var result in results)
