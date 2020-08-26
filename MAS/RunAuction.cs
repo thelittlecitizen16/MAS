@@ -16,6 +16,7 @@ namespace MAS
         private ManageAuction _manageAuction;
         private ManageAgents _manageAgents;
         private bool _timeEnd;
+        private bool _timeEndLastChance;
         private AuctionDeatiels _auctionDeatiels;
 
         public RunAuction(ManageAuction manageAuction)
@@ -23,6 +24,7 @@ namespace MAS
             _manageAuction = manageAuction;
             _manageAgents = new ManageAgents();
             _timeEnd = false;
+            _timeEndLastChance = false;
             _auctionDeatiels = new AuctionDeatiels(_manageAuction.Auction.Name, _manageAuction.Auction.StartPrice, _manageAuction.Auction.PriceJump);
         }
         public void SendAboutNewAuction()
@@ -39,8 +41,9 @@ namespace MAS
                     }
                 }));
 
-                Task.WaitAll(tasks.ToArray());
             }
+
+            Task.WaitAll(tasks.ToArray());
         }
 
         public void Run()
@@ -55,37 +58,71 @@ namespace MAS
             _manageAuction.AddFirstOffer(allResults);
             _manageAuction.CheckOffer(allResults);
 
-            RunTimeAuction();
+            List<Tuple<double?, IAgent>> resultsLastChance = RunAuctionAndLastChance();
 
-            Console.WriteLine("end");
 
+            while (resultsLastChance.Count > 0)
+            {
+                resultsLastChance = RunAuctionAndLastChance();
+            }
+
+            _manageAuction.EndAuction();
         }
         private void RunTimeAuction()
         {
             var aTimer = new Timer(1000);
-            aTimer.Elapsed += OnTimedEvent;
+            aTimer.Elapsed += OnTimedEventOfAuction;
 
             while (!_timeEnd)
             {
-                List<Tuple<double?, IAgent>> allResultss = _manageAuction.SendAgentIfWantToAddNewOffer();
-                Print(allResultss);
+                List<Tuple<double?, IAgent>> allResults = _manageAuction.SendAgentIfWantToAddNewOffer();
+                Print(allResults);
 
                 aTimer.Enabled = true;
 
-                if (allResultss.Where(r => r.Item1 > 0).Any())
+                if (allResults.Where(r => r.Item1.HasValue).Any())
                 {
                     aTimer.Enabled = false;
-                    _manageAuction.CheckOffer(allResultss);
+                    _manageAuction.CheckOffer(allResults);
                 }
             }
+
+            _timeEnd = false;
+        }
+        private List<Tuple<double?, IAgent>> AuctionLastChance()
+        {
+            _manageAuction.SendLastChance();
+            var aTimer = new Timer(1000);
+            aTimer.Elapsed += OnTimedEventOfLastChance;
+
+            List<Tuple<double?, IAgent>> allResults;
+
+            while (!_timeEndLastChance)
+            {
+                allResults = _manageAuction.SendAgentIfWantToAddLastOffer();
+
+                aTimer.Enabled = true;
+
+                if (allResults.Where(r => r.Item1.HasValue).Any())
+                {
+                    _timeEndLastChance = false;
+                     Print(allResults);
+                    _manageAuction.CheckOffer(allResults);
+
+                    return allResults;
+                }
+            }
+
+            allResults = new List<Tuple<double?, IAgent>>();
+            _timeEndLastChance = false;
+
+            return allResults;
         }
 
-        private void Print(List<Tuple<double, IAgent>> results)
+        private List<Tuple<double?, IAgent>> RunAuctionAndLastChance()
         {
-            foreach (var result in results)
-            {
-                Console.WriteLine($"the agent {result.Item2.Name} add offer with the price {result.Item1}");
-            }
+            RunTimeAuction();
+            return AuctionLastChance();
         }
         private void Print(List<Tuple<double?, IAgent>> results)
         {
@@ -96,14 +133,21 @@ namespace MAS
                 {
                     if (result.Item1.HasValue)
                     {
-                        Console.WriteLine($"the agent {result.Item2.Name} add offer with the price {result.Item1}");
+                        if (_manageAuction.IsJumpOk(result.Item1.Value))
+                        {
+                            Console.WriteLine($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value}");
+                        }
                     }     
                 }
             }
         }
-        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        private void OnTimedEventOfAuction(Object source, System.Timers.ElapsedEventArgs e)
         {
             _timeEnd = true;
+        }
+        private void OnTimedEventOfLastChance(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            _timeEndLastChance = true;
         }
 
     }

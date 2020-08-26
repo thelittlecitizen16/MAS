@@ -32,7 +32,7 @@ namespace AgentsProject.Agents
 
         public Tuple<double?, IAgent> OfferLastChance(Guid auctionID, string agentName, double offerPrice)
         {
-            return new Tuple<double?, IAgent>(_algorithm.OfferLastChance(auctionID, agentName, offerPrice), this);
+            return new Tuple<double?, IAgent>(600, this);
         }
     }
 }

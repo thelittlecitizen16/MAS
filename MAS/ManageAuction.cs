@@ -52,36 +52,51 @@ namespace MAS
 
         public void EndAuction()
         {
-            Console.WriteLine($"the auction over-");
-            Console.WriteLine($"{_lastAgentOffer.Name} is the winner and he buy in {_lastOfferPrice}");
+            Console.WriteLine($"SOLD for {_lastOfferPrice} - {Auction.Product.Name} ");
+            Console.WriteLine($"{_lastAgentOffer.Name} is the winner!!");
 
+        }
+        public void SendLastChance()
+        {
+            Console.WriteLine($"{_lastAgentOffer.Name} is the last offer with price {_lastOfferPrice}");
         }
 
         public List<Tuple<double?, IAgent>> SendAgentIfWantToAddFirstOffer()
         {
             var parameter = new object[] { Auction.ID };
-            return SendAgentAboutOffer(true,parameter);
+            return SendAgentAboutOffer(0,parameter);
         }
 
         public List<Tuple<double?, IAgent>> SendAgentIfWantToAddNewOffer()
         {
             var parameters = new object[] { Auction.ID, _lastAgentOffer.Name , _lastOfferPrice};
-            return SendAgentAboutOffer(false,parameters);
+            return SendAgentAboutOffer(1,parameters);
+        }
+        public List<Tuple<double?, IAgent>> SendAgentIfWantToAddLastOffer()
+        {
+            var parameters = new object[] { Auction.ID, _lastAgentOffer.Name, _lastOfferPrice };
+            return SendAgentAboutOffer(2, parameters);
         }
 
-        private List<Tuple<double?, IAgent>> SendAgentAboutOffer(bool first, params object[] paramaters)
+        private List<Tuple<double?, IAgent>> SendAgentAboutOffer(int place, params object[] paramaters)
         {
             List<Task> tasks = new List<Task>();
 
             List<Tuple<double?, IAgent>> allResults = new List<Tuple<double?, IAgent>>();
-            var allAgentsInAuctions = NewOffer.GetInvocationList();
+            var allAgentsInAuctions = FirstOffer.GetInvocationList();
 
-            if (first)
+            if (place==1)
             {
-                 allAgentsInAuctions = FirstOffer.GetInvocationList();
+                 allAgentsInAuctions = NewOffer.GetInvocationList();
+
             }
-           
-           
+            if (place == 2)
+            {
+                 allAgentsInAuctions = LastOffer.GetInvocationList();
+
+            }
+
+
             foreach (var agent in allAgentsInAuctions)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
@@ -90,6 +105,7 @@ namespace MAS
                     allResults.Add(tuple);
                 }));
             }
+
             Task.WaitAll(tasks.ToArray());
 
             return allResults;
@@ -102,12 +118,11 @@ namespace MAS
         }
         public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
         {
-            
             foreach (var result in allResults)
             {
                 if (result.Item1.HasValue)
                 {
-                    if (_lastOfferPrice < result.Item1)
+                    if (_lastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value))
                     {
                         _lastOfferPrice = result.Item1.Value;
                         _lastAgentOffer = result.Item2;
@@ -115,6 +130,15 @@ namespace MAS
                 }
                 
             }
+        }
+        public bool IsJumpOk(double price)
+        {
+            if (price >= _lastOfferPrice + Auction.PriceJump)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
