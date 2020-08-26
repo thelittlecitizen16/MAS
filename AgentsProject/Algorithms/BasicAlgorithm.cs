@@ -1,4 +1,5 @@
 ﻿using AgentsProject.Interfaces;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,11 +21,11 @@ namespace AgentsProject.Algorithms
             return true;
         }
 
-        public double FirstOffer(Guid auctionID)
+        public double? FirstOffer(Guid auctionID)
         {
-
             return _auctionsDeatiels[auctionID].StartPrice + _auctionsDeatiels[auctionID].PriceJump;
         }
+
 
         public double? NewOffer(Guid auctionID, string agentName, double offerPrice)
         {

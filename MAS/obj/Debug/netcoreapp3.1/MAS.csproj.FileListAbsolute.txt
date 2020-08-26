@@ -14,3 +14,5 @@ C:\Users\thelittlecitizen16\source\repos\MAS\MAS\obj\Debug\netcoreapp3.1\MAS.csp
 C:\Users\thelittlecitizen16\source\repos\MAS\MAS\obj\Debug\netcoreapp3.1\MAS.dll
 C:\Users\thelittlecitizen16\source\repos\MAS\MAS\obj\Debug\netcoreapp3.1\MAS.pdb
 C:\Users\thelittlecitizen16\source\repos\MAS\MAS\obj\Debug\netcoreapp3.1\MAS.genruntimeconfig.cache
+C:\Users\thelittlecitizen16\source\repos\MAS\MAS\bin\Debug\netcoreapp3.1\Common.dll
+C:\Users\thelittlecitizen16\source\repos\MAS\MAS\bin\Debug\netcoreapp3.1\Common.pdb

@@ -1,7 +1,6 @@
 C:\Users\thelittlecitizen16\source\repos\MAS\Common\bin\Debug\netstandard2.0\Common.deps.json
 C:\Users\thelittlecitizen16\source\repos\MAS\Common\bin\Debug\netstandard2.0\Common.dll
 C:\Users\thelittlecitizen16\source\repos\MAS\Common\bin\Debug\netstandard2.0\Common.pdb
-C:\Users\thelittlecitizen16\source\repos\MAS\Common\obj\Debug\netstandard2.0\Common.csprojAssemblyReference.cache
 C:\Users\thelittlecitizen16\source\repos\MAS\Common\obj\Debug\netstandard2.0\Common.AssemblyInfoInputs.cache
 C:\Users\thelittlecitizen16\source\repos\MAS\Common\obj\Debug\netstandard2.0\Common.AssemblyInfo.cs
 C:\Users\thelittlecitizen16\source\repos\MAS\Common\obj\Debug\netstandard2.0\Common.csproj.CoreCompileInputs.cache

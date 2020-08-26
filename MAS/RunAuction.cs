@@ -1,4 +1,5 @@
 ﻿using AgentsProject.Interfaces;
+using Common;
 using MAS.NewFolder;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,14 @@ namespace MAS
         private ManageAuction _manageAuction;
         private ManageAgents _manageAgents;
         private bool _timeEnd;
+        private AuctionDeatiels _auctionDeatiels;
 
         public RunAuction(ManageAuction manageAuction)
         {
-            _manageAgents = new ManageAgents();
             _manageAuction = manageAuction;
+            _manageAgents = new ManageAgents();
             _timeEnd = false;
+            _auctionDeatiels = new AuctionDeatiels(_manageAuction.Auction.Name, _manageAuction.Auction.StartPrice, _manageAuction.Auction.PriceJump);
         }
         public void SendAboutNewAuction()
         {
@@ -30,7 +33,7 @@ namespace MAS
             {
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    if (agent.EnterAuction(_manageAuction.Auction.Name, _manageAuction.Auction.StartPrice, _manageAuction.Auction.PriceJump))
+                    if (agent.EnterAuction(_manageAuction.Auction.ID, _auctionDeatiels))
                     {
                         _manageAuction.Subscribe(agent);
                     }
@@ -46,7 +49,7 @@ namespace MAS
             SendAboutNewAuction();
             _manageAuction.StartAuction();
 
-            List<Tuple<double, IAgent>> allResults = _manageAuction.SendAgentIfWantToAddFirstOffer();
+            List<Tuple<double?, IAgent>> allResults = _manageAuction.SendAgentIfWantToAddFirstOffer();
 
             Print(allResults);
             _manageAuction.CheckOfferFirst(allResults);
@@ -88,9 +91,12 @@ namespace MAS
 
             foreach (var result in results)
             {
-                if (result.Item1.HasValue)
+                if (result!= null)
                 {
-                    Console.WriteLine($"the agent {result.Item2.Name} add offer with the price {result.Item1}");
+                    if (result.Item1.HasValue)
+                    {
+                        Console.WriteLine($"the agent {result.Item2.Name} add offer with the price {result.Item1}");
+                    }     
                 }
             }
         }

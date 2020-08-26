@@ -1,5 +1,6 @@
 ﻿using AgentsProject.Algorithms;
 using AgentsProject.Interfaces;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,23 +17,23 @@ namespace AgentsProject.Agents
             _algorithm = new BasicAlgorithm();
             Name = "Bamas Family";
         }
-        public bool EnterAuction(string productName, double startPrice, double priceJump)
+        public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
-            return _algorithm.EnterAuction(productName, startPrice, priceJump);
+            return _algorithm.EnterAuction(auctionID, auctionDeatiels);
         }
-        public Tuple<double, IAgent> FirstOffer()
+        public Tuple<double?, IAgent> FirstOffer(Guid auctionID)
         {
-            return  new Tuple<double, IAgent>( _algorithm.FirstOffer() , this);
-        }
-
-        public Tuple<double?, IAgent> NewOffer(string agentName, double offerPrice)
-        {
-            return new Tuple<double?, IAgent>(_algorithm.NewOffer(agentName, offerPrice), this);
+            return  new Tuple<double?, IAgent>( _algorithm.FirstOffer(auctionID) , this);
         }
 
-        public Tuple<double, IAgent> OfferLastChance(string agentName, double offerPrice)
+        public Tuple<double?, IAgent> NewOffer(Guid auctionID,string agentName, double offerPrice)
         {
-            return new Tuple<double, IAgent>(_algorithm.OfferLastChance(agentName, offerPrice), this);
+            return new Tuple<double?, IAgent>(_algorithm.NewOffer(auctionID, agentName, offerPrice), this);
+        }
+
+        public Tuple<double?, IAgent> OfferLastChance(Guid auctionID,string agentName, double offerPrice)
+        {
+            return new Tuple<double?, IAgent>(_algorithm.OfferLastChance(auctionID,agentName, offerPrice), this);
         }
 
     }

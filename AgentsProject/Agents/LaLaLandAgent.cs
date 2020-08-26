@@ -1,5 +1,6 @@
 ﻿using AgentsProject.Algorithms;
 using AgentsProject.Interfaces;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,9 +20,9 @@ namespace AgentsProject.Agents
         {
             return _algorithm.EnterAuction(auctionID, auctionDeatiels);
         }
-        public Tuple<double, IAgent> FirstOffer(Guid auctionID)
+        public Tuple<double?, IAgent> FirstOffer(Guid auctionID)
         {
-            return new Tuple<double, IAgent>(_algorithm.FirstOffer(auctionID), this);
+            return new Tuple<double?, IAgent>(_algorithm.FirstOffer(auctionID), this);
         }
 
         public Tuple<double?, IAgent> NewOffer(Guid auctionID, string agentName, double offerPrice)

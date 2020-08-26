@@ -143,6 +143,9 @@
             "projectReferences": {
               "C:\\Users\\thelittlecitizen16\\source\\repos\\MAS\\AgentsProject\\AgentsProject.csproj": {
                 "projectPath": "C:\\Users\\thelittlecitizen16\\source\\repos\\MAS\\AgentsProject\\AgentsProject.csproj"
+              },
+              "C:\\Users\\thelittlecitizen16\\source\\repos\\MAS\\Common\\Common.csproj": {
+                "projectPath": "C:\\Users\\thelittlecitizen16\\source\\repos\\MAS\\Common\\Common.csproj"
               }
             }
           }
