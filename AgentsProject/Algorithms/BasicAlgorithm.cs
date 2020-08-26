@@ -7,37 +7,38 @@ namespace AgentsProject.Algorithms
 {
     public class BasicAlgorithm : IAlgorithm
     {
-        private string _productName;
-        private double _startPrice;
-        private double _priceJump;
-        private List<IAgent> _allAgentsInAuction;
+        private Dictionary<Guid, AuctionDeatiels> _auctionsDeatiels;
 
-        public bool EnterAuction(string productName, double startPrice, double priceJump)
+        public BasicAlgorithm()
         {
-            _productName = productName;
-            _startPrice = startPrice;
-            _priceJump = priceJump;
+            _auctionsDeatiels = new Dictionary<Guid, AuctionDeatiels>();
+        }
+
+        public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
+        {
+            _auctionsDeatiels.Add(auctionID, auctionDeatiels);
             return true;
         }
 
-        public double FirstOffer()
+        public double FirstOffer(Guid auctionID)
         {
-            return _startPrice + _priceJump;
+
+            return _auctionsDeatiels[auctionID].StartPrice + _auctionsDeatiels[auctionID].PriceJump;
         }
 
-        public double? NewOffer(string agentName, double offerPrice)
+        public double? NewOffer(Guid auctionID, string agentName, double offerPrice)
         {
             if (offerPrice < 500)
             {
-                return offerPrice + _priceJump;
+                return offerPrice + _auctionsDeatiels[auctionID].PriceJump;
             }
 
             return null;
         }
 
-        public double OfferLastChance(string agentName, double offerPrice)
+        public double? OfferLastChance(Guid auctionID, string agentName, double offerPrice)
         {
-            return 0;
+            return null;
         }
     }
 }
