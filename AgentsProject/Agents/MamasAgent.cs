@@ -48,6 +48,9 @@ namespace AgentsProject.Agents
             return new Tuple<double?, IAgent>(600, this);
         }
 
-      
+        public void TakeMoneyWhenWin(double priceToPay)
+        {
+            MoneyAccount -= priceToPay;
+        }
     }
 }

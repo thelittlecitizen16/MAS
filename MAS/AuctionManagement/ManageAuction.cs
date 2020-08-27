@@ -61,6 +61,7 @@ namespace MAS.AuctionManagement
 
         public void EndAuction()
         {
+            _lastAgentOffer.TakeMoneyWhenWin(_lastOfferPrice);
             _system.Write($"{_lastAgentOffer.Name} is the winner, SOLD {Auction.Product.Name} for {_lastOfferPrice}", _color);
         }
         public void SendLastChance()
@@ -123,11 +124,6 @@ namespace MAS.AuctionManagement
             return allResults;
         }
 
-        //public void AddFirstOffer(List<Tuple<double?, IAgent>> allResults)
-        //{
-        //    _lastAgentOffer = allResults.First().Item2;
-        //    _lastOfferPrice = allResults.First().Item1.Value;
-        //}
         public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
         {
             allResults = allResults.Where(r => r != null).ToList();
@@ -136,7 +132,7 @@ namespace MAS.AuctionManagement
                 
                 if (result.Item1.HasValue)
                 {
-                    if (_lastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value) && HaveMoney(result.Item1.Value, result.Item2))
+                    if (_lastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value) )
                     {
                         _lastOfferPrice = result.Item1.Value;
                         _lastAgentOffer = result.Item2;
@@ -145,17 +141,7 @@ namespace MAS.AuctionManagement
                 
             }
         }
-        public bool HaveMoney(double price, IAgent agent)
-        {
-            if (agent.MoneyAccount >= price)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+    
         public bool IsJumpOk(double price)
         {
             if (price >= _lastOfferPrice + Auction.PriceJump)

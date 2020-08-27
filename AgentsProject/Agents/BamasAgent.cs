@@ -49,5 +49,9 @@ namespace AgentsProject.Agents
             return new Tuple<double?, IAgent>(_algorithm.OfferLastChance(auctionID,agentName, offerPrice, AuctionsDeatiels[auctionID]), this);
         }
 
+        public void TakeMoneyWhenWin(double priceToPay)
+        {
+            MoneyAccount -= priceToPay;
+        }
     }
 }

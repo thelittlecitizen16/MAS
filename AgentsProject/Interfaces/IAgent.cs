@@ -15,5 +15,6 @@ namespace AgentsProject.Interfaces
         Tuple<double?, IAgent> FirstOffer(Guid auctionID);
         Tuple<double?, IAgent> NewOffer(Guid auctionID,string agentName, double offerPrice);
         Tuple<double?, IAgent> OfferLastChance(Guid auctionID, string agentName, double offerPrice);
+        void TakeMoneyWhenWin(double priceToPay);
     }
 }
