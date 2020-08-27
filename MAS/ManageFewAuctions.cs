@@ -29,8 +29,8 @@ namespace MAS
         public void Try()
         {
 
-            Task.Delay(CreateTimeToWait(runAuction.ManageAuction.Auction.StartTime)).ContinueWith(o => { runAuction.Run(); });
-            Task.Delay(CreateTimeToWait(runAuction2.ManageAuction.Auction.StartTime)).ContinueWith(o => { runAuction2.Run(); });
+            Task.Delay(CreateTimeToWait(runAuction.ManageAuction.ManageAuctionAgents.Auction.StartTime)).ContinueWith(o => { runAuction.Run(); });
+            Task.Delay(CreateTimeToWait(runAuction2.ManageAuction.ManageAuctionAgents.Auction.StartTime)).ContinueWith(o => { runAuction2.Run(); });
         }
 
         private TimeSpan CreateTimeToWait(DateTime date)

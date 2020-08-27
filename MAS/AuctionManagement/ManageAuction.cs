@@ -1,8 +1,10 @@
 ﻿using AgentsProject.Interfaces;
+using Common;
 using MAS.Interfaces;
 using MAS.MasDB;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -13,118 +15,67 @@ namespace MAS.AuctionManagement
 {
     public class ManageAuction
     {
-        public Auction Auction;
+        public ManageAuctionWithAgents ManageAuctionAgents;
         private ISystem _system;
         private ConsoleColor _color;
-        private IAgent _lastAgentOffer;
-        private double _lastOfferPrice;
         private ManageProducts _manageProducts;
-        private event Func<Guid, Tuple<double?, IAgent>> FirstOffer;
-        private event Func<Guid, string, double, Tuple<double?, IAgent>> NewOffer;
-        private event Func<Guid, string, double, Tuple<double?, IAgent>> LastOffer;
-        private event Action<Guid> EndAuctionToAgent;
-        //  private object Locker = new object();
+        private ManageAgents _manageAgents;
+        private AuctionDeatiels _auctionDeatiels;
+        private List<IAgent> _allAgentsInAuction;
 
-        public ManageAuction(ConsoleColor color, ManageProducts manageProducts, Auction auction, ISystem system)
+        public ManageAuction(ConsoleColor color, ManageProducts manageProducts, ManageAgents manageAgents, ManageAuctionWithAgents manageAuctionWithAgents, ISystem system)
         {
-            Auction = auction;
+            ManageAuctionAgents = manageAuctionWithAgents;
             _system = system;
             _color = color;
             _manageProducts = manageProducts;
-            _lastOfferPrice = 0;
+            _manageAgents = manageAgents;
+            _allAgentsInAuction = new List<IAgent>();
+            _auctionDeatiels = new AuctionDeatiels(ManageAuctionAgents.Auction.Name, ManageAuctionAgents.Auction.StartPrice, ManageAuctionAgents.Auction.PriceJump);
         }
-        public void Subscribe(IAgent agent)
+        public bool SendAboutNewAuction()
         {
-            //  lock (Locker)
-            //{
-            SendIfWantToAddFirstOffer(agent);
-            SendIfWantToAddNewOffer(agent);
-            LastChance(agent);
-            EventEndAuction(agent);
-            // }
-
-        }
-
-        public void StartAuction()
-        {
-            _system.Write($"the auction {Auction.Name} start now- the product is {Auction.Product.Name} the start price is {Auction.StartPrice}", _color);
-        }
-
-        private void SendIfWantToAddFirstOffer(IAgent agent)
-        {
-            FirstOffer += agent.FirstOffer;
-        }
-
-        private void SendIfWantToAddNewOffer(IAgent agent)
-        {
-            NewOffer += agent.NewOffer;
-        }
-
-        private void LastChance(IAgent agent)
-        {
-            LastOffer += agent.OfferLastChance;
-        }
-
-        private void EventEndAuction(IAgent agent)
-        {
-            EndAuctionToAgent += agent.EndAuction;
-        }
-
-        public void EndAuction()
-        {
-            _lastAgentOffer.TakeMoneyWhenWin(_lastOfferPrice);
-            _system.Write($"{_lastAgentOffer.Name} is the winner, SOLD {Auction.Product.Name} for {_lastOfferPrice}", _color);
-            _manageProducts.RemoveProduct(Auction.Product);
-            SendAgentAboutEndAuction();
-        }
-
-        public void SendLastChance()
-        {
-            _system.Write($"{_lastAgentOffer.Name} is the last offer with price {_lastOfferPrice}", _color);
-        }
-
-        public List<Tuple<double?, IAgent>> SendAgentIfWantToAddFirstOffer()
-        {
-            var parameter = new object[] { Auction.ID };
-            return SendAgentAboutOffer(FirstOffer.GetInvocationList(), parameter);
-        }
-
-        public List<Tuple<double?, IAgent>> SendAgentIfWantToAddNewOffer()
-        {
-            var parameters = new object[] { Auction.ID, _lastAgentOffer.Name, _lastOfferPrice };
-            return SendAgentAboutOffer(NewOffer.GetInvocationList(), parameters);
-        }
-
-        public List<Tuple<double?, IAgent>> SendAgentIfWantToAddLastOffer()
-        {
-            var parameters = new object[] { Auction.ID, _lastAgentOffer.Name, _lastOfferPrice };
-            return SendAgentAboutOffer(LastOffer.GetInvocationList(), parameters);
-        }
-
-        public List<Tuple<double?, IAgent>> SendAgentAboutEndAuction()
-        {
-            var parameters = new object[] { Auction.ID};
-            return SendAgentAboutOffer(EndAuctionToAgent.GetInvocationList(), parameters);
-        }
-         
-        private List<Tuple<double?, IAgent>> SendAgentAboutOffer(Delegate[] allAgentsInAuctions,  params object[] paramaters)
-        {
-            List<Task> tasks = new List<Task>();
-
-            List<Tuple<double?, IAgent>> allResults = new List<Tuple<double?, IAgent>>();
-
-            foreach (var agent in allAgentsInAuctions)
+            List<Task> tasks = new List<Task>(); ;
+            bool HaveOne = false;
+            foreach (var agent in _manageAgents.AllAgents)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    Tuple<double?, IAgent> tuple = (Tuple<double?, IAgent>)agent?.DynamicInvoke(paramaters);
-                    allResults.Add(tuple);
+                    if (agent.EnterAuction(ManageAuctionAgents.Auction.ID, _auctionDeatiels))
+                    {
+                        ManageAuctionAgents.Subscribe(agent);
+                        _allAgentsInAuction.Add(agent);
+                        HaveOne = true;
+                    }
                 }));
             }
 
             Task.WaitAll(tasks.ToArray());
+            return HaveOne;
+        }
+        public void StartAuction()
+        {
+            string auctionName = ManageAuctionAgents.Auction.Name;
+            string productName = ManageAuctionAgents.Auction.Product.Name;
+            double startPrice = ManageAuctionAgents.Auction.StartPrice;
+            _system.Write($"the auction {auctionName} start now- the product is {productName} the start price is {startPrice}", _color);
+        }
+    
+        public void EndAuction()
+        {
+            ManageAuctionAgents.LastAgentOffer.TakeMoneyWhenWin(ManageAuctionAgents.LastOfferPrice);
 
-            return allResults;
+            _system.Write($"{ManageAuctionAgents.LastAgentOffer.Name} is the winner, SOLD {ManageAuctionAgents.Auction.Product.Name} for {ManageAuctionAgents.LastOfferPrice}", _color);
+            
+            _manageProducts.RemoveProduct(ManageAuctionAgents.Auction.Product);
+
+            ManageAuctionAgents.SendAgentAboutEndAuction();
+            ManageAuctionAgents.RemoveAllAgentsFromEvent(_allAgentsInAuction);
+        }
+
+        public void SendLastChance()
+        {
+            _system.Write($"{ManageAuctionAgents.LastAgentOffer.Name} is the last offer with price {ManageAuctionAgents.LastOfferPrice}", _color);
         }
 
         public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
@@ -135,10 +86,10 @@ namespace MAS.AuctionManagement
 
                 if (result.Item1.HasValue)
                 {
-                    if (_lastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value))
+                    if (ManageAuctionAgents.LastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value))
                     {
-                        _lastOfferPrice = result.Item1.Value;
-                        _lastAgentOffer = result.Item2;
+                        ManageAuctionAgents.LastOfferPrice = result.Item1.Value;
+                        ManageAuctionAgents.LastAgentOffer = result.Item2;
                     }
                 }
 
@@ -147,7 +98,7 @@ namespace MAS.AuctionManagement
 
         public bool IsJumpOk(double price)
         {
-            if (price >= _lastOfferPrice + Auction.PriceJump)
+            if (price >= ManageAuctionAgents.LastOfferPrice + ManageAuctionAgents.Auction.PriceJump)
             {
                 return true;
             }

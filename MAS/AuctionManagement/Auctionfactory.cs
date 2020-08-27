@@ -19,7 +19,8 @@ namespace MAS.AuctionManagement
             int color =rand.Next(1, 16);
 
             Auction auction = new Auction(name, startTime, waitWithoutOffer, product, startPrice, priceJump);
-            ManageAuction manageAuction = new ManageAuction((ConsoleColor)color, manageProducts, auction, system);
+            ManageAuctionWithAgents manageAuctionWithAgents = new ManageAuctionWithAgents(auction);
+            ManageAuction manageAuction = new ManageAuction((ConsoleColor)color, manageProducts, manageAgents, manageAuctionWithAgents, system);
             return  new RunAuction(manageAuction, manageAgents, system, (ConsoleColor)color);
         }
     }

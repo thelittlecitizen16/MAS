@@ -19,7 +19,6 @@ namespace MAS.AuctionManagement
         private bool _timeEndFirstChance;
         private bool _timeEnd;
         private bool _timeEndLastChance;
-        private AuctionDeatiels _auctionDeatiels;
         private ISystem _system;
         private ConsoleColor _color;
 
@@ -31,31 +30,11 @@ namespace MAS.AuctionManagement
             _color = color;
             _timeEnd = false;
             _timeEndLastChance = false;
-            _auctionDeatiels = new AuctionDeatiels(ManageAuction.Auction.Name, ManageAuction.Auction.StartPrice, ManageAuction.Auction.PriceJump);
-        }
-        public bool SendAboutNewAuction()
-        {
-            List<Task> tasks = new List<Task>(); ;
-            bool HaveOne = false;
-            foreach (var agent in _manageAgents.AllAgents)
-            {
-                tasks.Add(Task.Factory.StartNew(() =>
-                {
-                    if (agent.EnterAuction(ManageAuction.Auction.ID, _auctionDeatiels))
-                    {
-                        ManageAuction.Subscribe(agent);
-                        HaveOne = true;
-                    }
-                }));
-            }
-
-            Task.WaitAll(tasks.ToArray());
-            return HaveOne;
         }
 
         public void Run()
         {
-            if (SendAboutNewAuction())
+            if (ManageAuction.SendAboutNewAuction())
             {
                 ManageAuction.StartAuction();
 
@@ -67,18 +46,18 @@ namespace MAS.AuctionManagement
             else
             {
                 _system.Write("No One Enter To The Auction", _color);
-            }       
+            }
         }
         private bool RunFirstTimeAuction()
         {
-            var aTimer = new Timer(ManageAuction.Auction.WaitWithoutOffer.TotalSeconds);
+            var aTimer = new Timer(ManageAuction.ManageAuctionAgents.Auction.WaitWithoutOffer.TotalSeconds);
             aTimer.Elapsed += OnTimedEventOfFirstStartAuction;
             bool HaveOffer = false; ;
 
             while (!_timeEndFirstChance)
             {
-                List<Tuple<double?, IAgent>> allResults = ManageAuction.SendAgentIfWantToAddFirstOffer();
-                
+                List<Tuple<double?, IAgent>> allResults = ManageAuction.ManageAuctionAgents.SendAgentIfWantToAddFirstOffer();
+
                 allResults = allResults.Where(r => r != null).ToList();
 
                 if (allResults.Where(r => r.Item1.HasValue).Any())
@@ -102,16 +81,16 @@ namespace MAS.AuctionManagement
                 aTimer.Enabled = true;
             }
 
-            return HaveOffer;    
+            return HaveOffer;
         }
         private void RunTimeAuction()
         {
-            var aTimer = new Timer(ManageAuction.Auction.WaitWithoutOffer.TotalSeconds);
+            var aTimer = new Timer(ManageAuction.ManageAuctionAgents.Auction.WaitWithoutOffer.TotalSeconds);
             aTimer.Elapsed += OnTimedEventOfAuction;
 
             while (!_timeEnd)
             {
-                List<Tuple<double?, IAgent>> allResults = ManageAuction.SendAgentIfWantToAddNewOffer();
+                List<Tuple<double?, IAgent>> allResults = ManageAuction.ManageAuctionAgents.SendAgentIfWantToAddNewOffer();
                 Print(allResults);
 
                 aTimer.Enabled = true;
@@ -123,23 +102,22 @@ namespace MAS.AuctionManagement
                     aTimer.Enabled = false;
                     ManageAuction.CheckOffer(allResults);
                 }
-                
+
             }
 
             _timeEnd = false;
         }
-
         private List<Tuple<double?, IAgent>> AuctionLastChance()
         {
             ManageAuction.SendLastChance();
-            var aTimer = new Timer(ManageAuction.Auction.WaitWithoutOffer.TotalSeconds);
+            var aTimer = new Timer(ManageAuction.ManageAuctionAgents.Auction.WaitWithoutOffer.TotalSeconds);
             aTimer.Elapsed += OnTimedEventOfLastChance;
 
             List<Tuple<double?, IAgent>> allResults;
 
             while (!_timeEndLastChance)
             {
-                allResults = ManageAuction.SendAgentIfWantToAddLastOffer();
+                allResults = ManageAuction.ManageAuctionAgents.SendAgentIfWantToAddLastOffer();
 
                 aTimer.Enabled = true;
                 if (allResults.Count > 0)
@@ -160,7 +138,6 @@ namespace MAS.AuctionManagement
 
             return allResults;
         }
-
         private List<Tuple<double?, IAgent>> RunAuctionAndLastChance()
         {
             RunTimeAuction();
@@ -175,9 +152,9 @@ namespace MAS.AuctionManagement
                 {
                     if (result.Item1.HasValue)
                     {
-                        if (ManageAuction.IsJumpOk(result.Item1.Value) )
+                        if (ManageAuction.IsJumpOk(result.Item1.Value))
                         {
-                            _system.Write($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value} in aucction {ManageAuction.Auction.ID}", _color);
+                            _system.Write($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value} in aucction {ManageAuction.ManageAuctionAgents.Auction.ID}", _color);
                         }
                     }
                 }
