@@ -24,19 +24,35 @@ namespace AgentsProject.Algorithms
             return false;
         }
 
-        public double? FirstOffer(Guid auctionID)
+        public double? FirstOffer(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
-            throw new NotImplementedException();
+            int num = _rand.Next(1, 3);
+            double addPrice = auctionDeatiels.PriceJump * num;
+            return auctionDeatiels.StartPrice + addPrice;
         }
 
-        public double? NewOffer(Guid auctionID, string agentName, double offerPrice)
+        public double? NewOffer(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels)
         {
-            throw new NotImplementedException();
+
+            if (offerPrice < 700)
+            {
+                int num = _rand.Next(1, 3);
+                double addPrice = auctionDeatiels.PriceJump * num;
+                return offerPrice + addPrice;
+            }
+
+            return null;
         }
 
-        public double? OfferLastChance(Guid auctionID, string agentName, double offerPrice)
+        public double? OfferLastChance(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels)
         {
-            throw new NotImplementedException();
+            int num = _rand.Next(1, 3);
+            if (num == 1)
+            {
+                return offerPrice + auctionDeatiels.PriceJump;
+            }
+
+            return null;
         }
     }
 }

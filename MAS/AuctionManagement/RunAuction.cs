@@ -16,6 +16,7 @@ namespace MAS.AuctionManagement
     {
         public ManageAuction ManageAuction;
         private ManageAgents _manageAgents;
+        private bool _timeEndFirstChance;
         private bool _timeEnd;
         private bool _timeEndLastChance;
         private AuctionDeatiels _auctionDeatiels;
@@ -32,10 +33,10 @@ namespace MAS.AuctionManagement
             _timeEndLastChance = false;
             _auctionDeatiels = new AuctionDeatiels(ManageAuction.Auction.Name, ManageAuction.Auction.StartPrice, ManageAuction.Auction.PriceJump);
         }
-        public void SendAboutNewAuction()
+        public bool SendAboutNewAuction()
         {
             List<Task> tasks = new List<Task>(); ;
-
+            bool HaveOne = false;
             foreach (var agent in _manageAgents.AllAgents)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
@@ -43,35 +44,65 @@ namespace MAS.AuctionManagement
                     if (agent.EnterAuction(ManageAuction.Auction.ID, _auctionDeatiels))
                     {
                         ManageAuction.Subscribe(agent);
+                        HaveOne = true;
                     }
                 }));
-
             }
 
             Task.WaitAll(tasks.ToArray());
+            return HaveOne;
         }
 
         public void Run()
         {
-
-            SendAboutNewAuction();
-            ManageAuction.StartAuction();
-
-            List<Tuple<double?, IAgent>> allResults = ManageAuction.SendAgentIfWantToAddFirstOffer();
-
-            Print(allResults);
-            ManageAuction.AddFirstOffer(allResults);
-            ManageAuction.CheckOffer(allResults);
-
-            List<Tuple<double?, IAgent>> resultsLastChance = RunAuctionAndLastChance();
-
-
-            while (resultsLastChance.Count > 0)
+            if (SendAboutNewAuction())
             {
-                resultsLastChance = RunAuctionAndLastChance();
+                ManageAuction.StartAuction();
+
+                if (!RunFirstTimeAuction())
+                {
+                    _system.Write("no one add offer!", _color);
+                }
+            }
+            else
+            {
+                _system.Write("No One Enter To The Auction", _color);
+            }       
+        }
+        private bool RunFirstTimeAuction()
+        {
+            var aTimer = new Timer(ManageAuction.Auction.WaitWithoutOffer.TotalSeconds);
+            aTimer.Elapsed += OnTimedEventOfFirstStartAuction;
+            bool HaveOffer = false; ;
+
+            while (!_timeEndFirstChance)
+            {
+                List<Tuple<double?, IAgent>> allResults = ManageAuction.SendAgentIfWantToAddFirstOffer();
+                
+                allResults = allResults.Where(r => r != null).ToList();
+
+                if (allResults.Where(r => r.Item1.HasValue).Any())
+                {
+                    aTimer.Enabled = false;
+                    HaveOffer = true;
+                    Print(allResults);
+                    ManageAuction.CheckOffer(allResults);
+                    List<Tuple<double?, IAgent>> resultsLastChance = RunAuctionAndLastChance();
+
+                    while (resultsLastChance.Count > 0)
+                    {
+                        resultsLastChance = RunAuctionAndLastChance();
+                    }
+
+                    ManageAuction.EndAuction();
+
+                    _timeEndFirstChance = true;
+                }
+
+                aTimer.Enabled = true;
             }
 
-            ManageAuction.EndAuction();
+            return HaveOffer;    
         }
         private void RunTimeAuction()
         {
@@ -152,6 +183,10 @@ namespace MAS.AuctionManagement
                 }
             }
         }
+        private void OnTimedEventOfFirstStartAuction(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            _timeEndFirstChance = true;
+        }
         private void OnTimedEventOfAuction(Object source, System.Timers.ElapsedEventArgs e)
         {
             _timeEnd = true;
@@ -160,6 +195,5 @@ namespace MAS.AuctionManagement
         {
             _timeEndLastChance = true;
         }
-
     }
 }

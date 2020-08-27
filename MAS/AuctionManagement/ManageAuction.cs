@@ -19,18 +19,25 @@ namespace MAS.AuctionManagement
         private event Func<Guid,Tuple<double?, IAgent>> FirstOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> NewOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> LastOffer;
+      //  private object Locker = new object();
 
         public ManageAuction(ConsoleColor color, Auction auction, ISystem system)
         {
             Auction = auction;
             _system = system;
             _color = color;
+            _lastOfferPrice = 0;
+
         }
         public void Subscribe(IAgent agent)
         {
-            SendIfWantToAddFirstOffer(agent);
-            SendIfWantToAddNewOffer(agent);
-            LastChance(agent);
+          //  lock (Locker)
+            //{
+                SendIfWantToAddFirstOffer(agent);
+                SendIfWantToAddNewOffer(agent);
+                LastChance(agent);
+           // }
+
         }
 
         public void StartAuction()
@@ -83,16 +90,21 @@ namespace MAS.AuctionManagement
             List<Task> tasks = new List<Task>();
 
             List<Tuple<double?, IAgent>> allResults = new List<Tuple<double?, IAgent>>();
-            var allAgentsInAuctions = FirstOffer.GetInvocationList();
+            var allAgentsInAuctions = new Delegate[0];
 
             if (place==1)
             {
                  allAgentsInAuctions = NewOffer.GetInvocationList();
 
             }
-            if (place == 2)
+            else if (place == 2)
             {
                  allAgentsInAuctions = LastOffer.GetInvocationList();
+
+            }
+            else
+            {
+                allAgentsInAuctions = FirstOffer.GetInvocationList();
 
             }
 
@@ -111,11 +123,11 @@ namespace MAS.AuctionManagement
             return allResults;
         }
 
-        public void AddFirstOffer(List<Tuple<double?, IAgent>> allResults)
-        {
-            _lastAgentOffer = allResults.First().Item2;
-            _lastOfferPrice = allResults.First().Item1.Value;
-        }
+        //public void AddFirstOffer(List<Tuple<double?, IAgent>> allResults)
+        //{
+        //    _lastAgentOffer = allResults.First().Item2;
+        //    _lastOfferPrice = allResults.First().Item1.Value;
+        //}
         public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
         {
             allResults = allResults.Where(r => r != null).ToList();

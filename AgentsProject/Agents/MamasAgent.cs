@@ -11,12 +11,12 @@ namespace AgentsProject.Agents
     public class MamasAgent : IAgent
     {
         public string Name { get; private set; }
-        private BasicAlgorithm _algorithm;
+        private RandomAlgorithm _algorithm;
         public ConcurrentDictionary<Guid, AuctionDeatiels> AuctionsDeatiels { get; private set; }
         public MamasAgent()
         {
             AuctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
-            _algorithm = new BasicAlgorithm();
+            _algorithm = new RandomAlgorithm();
             Name = "Mams Empire";
         }
         public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
