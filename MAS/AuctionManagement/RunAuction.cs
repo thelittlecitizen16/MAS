@@ -52,19 +52,21 @@ namespace MAS.AuctionManagement
         {
             var aTimer = new Timer(ManageAuction.ManageAuctionAgents.Auction.WaitWithoutOffer.TotalSeconds);
             aTimer.Elapsed += OnTimedEventOfFirstStartAuction;
+
             bool HaveOffer = false; ;
 
             while (!_timeEndFirstChance)
             {
                 List<Tuple<double?, IAgent>> allResults = ManageAuction.ManageAuctionAgents.SendAgentIfWantToAddFirstOffer();
-
                 allResults = allResults.Where(r => r != null).ToList();
 
                 if (allResults.Where(r => r.Item1.HasValue).Any())
                 {
                     aTimer.Enabled = false;
                     HaveOffer = true;
+
                     Print(allResults);
+
                     ManageAuction.CheckOffer(allResults);
                     List<Tuple<double?, IAgent>> resultsLastChance = RunAuctionAndLastChance();
 

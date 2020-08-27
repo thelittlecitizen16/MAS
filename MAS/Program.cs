@@ -16,9 +16,7 @@ namespace MAS
             ConsoleSystem consoleSystem = new ConsoleSystem();
            
             ManageFewAuctions manageFewAuctions = new ManageFewAuctions(consoleSystem, manageAgents, manageProducts);
-            manageFewAuctions.Try();
-
-            Console.ReadLine();
+            manageFewAuctions.RunAllAuctionsForProducts();
         }
     }
 }

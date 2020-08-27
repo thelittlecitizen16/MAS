@@ -12,25 +12,52 @@ namespace MAS
     public class ManageFewAuctions
     {
 
-        private Auctionfactory auctionfactory;
-
-
-        private RunAuction runAuction;
-        private RunAuction runAuction2;
+        private Auctionfactory _auctionfactory;
+        private ManageProducts _manageProducts;
+        private ISystem _system;
+        private ManageAgents _manageAgents;
+        private Random rand;
 
         public ManageFewAuctions(ISystem system , ManageAgents manageAgents, ManageProducts manageProducts)
         {
-            auctionfactory = new Auctionfactory();
-
-            runAuction = auctionfactory.CreateAuction(system, manageProducts, manageAgents, "one", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
-            runAuction2 = auctionfactory.CreateAuction(system, manageProducts, manageAgents, "two", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
+            _auctionfactory = new Auctionfactory();
+            _system = system;
+            _manageAgents = manageAgents;
+            _manageProducts = manageProducts;
+            rand = new Random();
         }
 
-        public void Try()
+        public void RunAllAuctionsForProducts()
         {
+            List<RunAuction> allAuctions = CreateAuctionEachProduct();
+            List<Task> allAuctionTasks = CreateTaskEachAuction(allAuctions);
 
-            Task.Delay(CreateTimeToWait(runAuction.ManageAuction.ManageAuctionAgents.Auction.StartTime)).ContinueWith(o => { runAuction.Run(); });
-            Task.Delay(CreateTimeToWait(runAuction2.ManageAuction.ManageAuctionAgents.Auction.StartTime)).ContinueWith(o => { runAuction2.Run(); });
+            Task.WaitAll(allAuctionTasks.ToArray());
+        }
+        private List<RunAuction> CreateAuctionEachProduct()
+        {
+            List<RunAuction> allAuctions = new List<RunAuction>();
+            foreach (var product in _manageProducts.AllProducts)
+            {
+                double price = rand.Next(50, 500);
+                double jumpPrice = rand.Next(50, 200);
+                int seconds = rand.Next(0, 30);
+
+                allAuctions.Add(_auctionfactory.CreateAuction(_system, _manageProducts, _manageAgents, "WoW", DateTime.Now.AddSeconds(seconds), TimeSpan.FromSeconds(1000), product, price, jumpPrice));
+            }
+
+            return allAuctions;
+        }
+        private List<Task> CreateTaskEachAuction(List<RunAuction> allAuctions)
+        {
+            List<Task> allAuctionTasks = new List<Task>();
+
+            foreach (var auction in allAuctions)
+            {
+                allAuctionTasks.Add(Task.Delay(CreateTimeToWait(auction.ManageAuction.ManageAuctionAgents.Auction.StartTime))
+                .ContinueWith(o => { auction.Run(); }));
+            }
+            return allAuctionTasks;
         }
 
         private TimeSpan CreateTimeToWait(DateTime date)
