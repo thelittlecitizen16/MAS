@@ -136,13 +136,24 @@ namespace MAS.AuctionManagement
                 
                 if (result.Item1.HasValue)
                 {
-                    if (_lastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value))
+                    if (_lastOfferPrice < result.Item1 && IsJumpOk(result.Item1.Value) && HaveMoney(result.Item1.Value, result.Item2))
                     {
                         _lastOfferPrice = result.Item1.Value;
                         _lastAgentOffer = result.Item2;
                     }
                 }
                 
+            }
+        }
+        public bool HaveMoney(double price, IAgent agent)
+        {
+            if (agent.MoneyAccount >= price)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         public bool IsJumpOk(double price)

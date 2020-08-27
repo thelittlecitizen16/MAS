@@ -175,7 +175,7 @@ namespace MAS.AuctionManagement
                 {
                     if (result.Item1.HasValue)
                     {
-                        if (ManageAuction.IsJumpOk(result.Item1.Value))
+                        if (ManageAuction.IsJumpOk(result.Item1.Value) && ManageAuction.HaveMoney(result.Item1.Value, result.Item2))
                         {
                             _system.Write($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value} in aucction {ManageAuction.Auction.ID}", _color);
                         }

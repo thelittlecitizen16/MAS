@@ -12,6 +12,8 @@ namespace AgentsProject.Agents
     {
         public string Name { get; private set; }
         private RandomAlgorithm _algorithm;
+        public double MoneyAccount { get; private set; }
+
         public ConcurrentDictionary<Guid, AuctionDeatiels> AuctionsDeatiels { get; private set; }
 
         public BamasAgent()
@@ -19,6 +21,7 @@ namespace AgentsProject.Agents
             AuctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
             _algorithm = new RandomAlgorithm();
             Name = "Bamas Family";
+            MoneyAccount = 1000;
         }
         public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {

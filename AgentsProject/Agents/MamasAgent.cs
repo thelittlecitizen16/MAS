@@ -13,11 +13,14 @@ namespace AgentsProject.Agents
         public string Name { get; private set; }
         private RandomAlgorithm _algorithm;
         public ConcurrentDictionary<Guid, AuctionDeatiels> AuctionsDeatiels { get; private set; }
+        public double MoneyAccount { get; private set; }
+
         public MamasAgent()
         {
             AuctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
             _algorithm = new RandomAlgorithm();
             Name = "Mams Empire";
+            MoneyAccount = 500;
         }
         public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
@@ -44,5 +47,7 @@ namespace AgentsProject.Agents
         {
             return new Tuple<double?, IAgent>(600, this);
         }
+
+      
     }
 }

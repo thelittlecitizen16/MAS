@@ -10,6 +10,7 @@ namespace AgentsProject.Interfaces
     {
         string Name { get; }
         ConcurrentDictionary<Guid, AuctionDeatiels> AuctionsDeatiels { get; }
+        double MoneyAccount { get; }
         bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels);
         Tuple<double?, IAgent> FirstOffer(Guid auctionID);
         Tuple<double?, IAgent> NewOffer(Guid auctionID,string agentName, double offerPrice);
