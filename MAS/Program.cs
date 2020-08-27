@@ -1,4 +1,9 @@
-﻿using System;
+﻿using MAS.MasDB;
+using System;
+using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MAS
 {
@@ -6,7 +11,12 @@ namespace MAS
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ManageProducts manageProducts = new ManageProducts();
+            ManageAgents manageAgents = new ManageAgents();
+            ConsoleSystem consoleSystem = new ConsoleSystem();
+           
+            ManageFewAuctions manageFewAuctions = new ManageFewAuctions(consoleSystem, manageAgents, manageProducts);
+            manageFewAuctions.RunAllAuctionsForProducts();
         }
     }
 }

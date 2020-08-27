@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Common;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,9 +8,14 @@ namespace AgentsProject.Interfaces
 {
     public interface IAgent
     {
-         string Name { get; }
-        bool EnterAuction(string productName, double startPrice, double priceJump, List<IAgent> allAgentsInAuction);
-        double NewOffer(string agentName, double offerPrice);
-        double OfferLastChance(string agentName, double offerPrice);
+        string Name { get; }
+        ConcurrentDictionary<Guid, AuctionDeatiels> AuctionsDeatiels { get; }
+        double MoneyAccount { get; }
+        bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels);
+        Tuple<double?, IAgent> FirstOffer(Guid auctionID);
+        Tuple<double?, IAgent> NewOffer(Guid auctionID,string agentName, double offerPrice);
+        Tuple<double?, IAgent> OfferLastChance(Guid auctionID, string agentName, double offerPrice);
+        void TakeMoneyWhenWin(double priceToPay);
+        void EndAuction(Guid auctionID);
     }
 }

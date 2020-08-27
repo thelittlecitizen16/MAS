@@ -1,5 +1,7 @@
 ﻿using AgentsProject.Interfaces;
+using Common;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,33 +9,31 @@ namespace AgentsProject.Algorithms
 {
     public class BasicAlgorithm : IAlgorithm
     {
-        private string _productName;
-        private double _startPrice;
-        private double _priceJump;
-        private List<IAgent> _allAgentsInAuction;
 
-        public bool EnterAuction(string productName, double startPrice, double priceJump, List<IAgent> allAgentsInAuction)
+        public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
-            _productName = productName;
-            _startPrice = startPrice;
-            _priceJump = priceJump;
-            _allAgentsInAuction = allAgentsInAuction;
             return true;
         }
 
-        public double NewOffer(string agentName, double offerPrice)
+        public double? FirstOffer(Guid auctionID, AuctionDeatiels auctionDeatiels)
+        {
+            return auctionDeatiels.StartPrice + auctionDeatiels.PriceJump;
+        }
+
+
+        public double? NewOffer(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels)
         {
             if (offerPrice < 500)
             {
-                return offerPrice + _priceJump;
+                return offerPrice + auctionDeatiels.PriceJump;
             }
 
-            return 0;
+            return null;
         }
 
-        public double OfferLastChance(string agentName, double offerPrice)
+        public double? OfferLastChance(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels)
         {
-            return 0;
+            return null;
         }
     }
 }

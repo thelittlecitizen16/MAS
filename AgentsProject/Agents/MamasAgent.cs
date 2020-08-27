@@ -1,6 +1,8 @@
 ﻿using AgentsProject.Algorithms;
 using AgentsProject.Interfaces;
+using Common;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,25 +11,51 @@ namespace AgentsProject.Agents
     public class MamasAgent : IAgent
     {
         public string Name { get; private set; }
-        private BasicAlgorithm _algorithm;
+        private RandomAlgorithm _algorithm;
+        public ConcurrentDictionary<Guid, AuctionDeatiels> AuctionsDeatiels { get; private set; }
+        public double MoneyAccount { get; private set; }
+
         public MamasAgent()
         {
-            _algorithm = new BasicAlgorithm();
+            AuctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
+            _algorithm = new RandomAlgorithm();
             Name = "Mams Empire";
+            MoneyAccount = 5000;
         }
-        public bool EnterAuction(string productName, double startPrice, double priceJump, List<IAgent> allAgentsInAuction)
+        public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
-           return _algorithm.EnterAuction(productName, startPrice, priceJump, allAgentsInAuction);
+            bool chice = _algorithm.EnterAuction(auctionID, auctionDeatiels);
+
+            if (chice)
+            {
+                AuctionsDeatiels.TryAdd(auctionID, auctionDeatiels);
+            }
+
+            return chice;
+        }
+        public Tuple<double?, IAgent> FirstOffer(Guid auctionID)
+        {
+            return new Tuple<double?, IAgent>(_algorithm.FirstOffer(auctionID, AuctionsDeatiels[auctionID]), this);
         }
 
-        public double NewOffer(string agentName, double offerPrice)
+        public Tuple<double?, IAgent> NewOffer(Guid auctionID, string agentName, double offerPrice)
         {
-            return _algorithm.NewOffer(agentName , offerPrice);
+            return new Tuple<double?, IAgent>(_algorithm.NewOffer(auctionID, agentName, offerPrice, AuctionsDeatiels[auctionID]), this);
         }
 
-        public double OfferLastChance(string agentName, double offerPrice)
+        public Tuple<double?, IAgent> OfferLastChance(Guid auctionID, string agentName, double offerPrice)
         {
-            return _algorithm.OfferLastChance(agentName, offerPrice);
+            return new Tuple<double?, IAgent>(600, this);
+        }
+
+        public void TakeMoneyWhenWin(double priceToPay)
+        {
+            MoneyAccount -= priceToPay;
+        }
+        public void EndAuction(Guid auctionID)
+        {
+            AuctionDeatiels auctionDeatiels;
+            AuctionsDeatiels.TryRemove(auctionID, out auctionDeatiels);
         }
     }
 }
