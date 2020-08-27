@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace MAS.AuctionManagement
 {
-    public class ManageAuction
+    public class ManageAuction : IManageAuction
     {
-        public ManageAuctionWithAgents ManageAuctionAgents;
+        public IManageAuctionWithAgents ManageAuctionAgents { get; private set; }
         private ISystem _system;
         private ConsoleColor _color;
         private ManageProducts _manageProducts;
@@ -23,7 +23,7 @@ namespace MAS.AuctionManagement
         private AuctionDeatiels _auctionDeatiels;
         private List<IAgent> _allAgentsInAuction;
 
-        public ManageAuction(ConsoleColor color, ManageProducts manageProducts, ManageAgents manageAgents, ManageAuctionWithAgents manageAuctionWithAgents, ISystem system)
+        public ManageAuction(ConsoleColor color, ManageProducts manageProducts, ManageAgents manageAgents, IManageAuctionWithAgents manageAuctionWithAgents, ISystem system)
         {
             ManageAuctionAgents = manageAuctionWithAgents;
             _system = system;
@@ -58,14 +58,14 @@ namespace MAS.AuctionManagement
             string auctionName = ManageAuctionAgents.Auction.Name;
             string productName = ManageAuctionAgents.Auction.Product.Name;
             double startPrice = ManageAuctionAgents.Auction.StartPrice;
-            _system.Write($"the auction {auctionName} start now- the product is {productName} the start price is {startPrice}", _color);
+            _system.Write($"START NOW: auction {auctionName} the product is {productName} the start price is {startPrice}", _color);
         }
     
         public void EndAuction()
         {
             ManageAuctionAgents.LastAgentOffer.TakeMoneyWhenWin(ManageAuctionAgents.LastOfferPrice);
 
-            _system.Write($"{ManageAuctionAgents.LastAgentOffer.Name} is the winner, SOLD {ManageAuctionAgents.Auction.Product.Name} for {ManageAuctionAgents.LastOfferPrice}", _color);
+            _system.Write($"{ManageAuctionAgents.LastAgentOffer.Name} is the WINNER, SOLD {ManageAuctionAgents.Auction.Product.Name} for {ManageAuctionAgents.LastOfferPrice}", _color);
             
             _manageProducts.RemoveProduct(ManageAuctionAgents.Auction.Product);
 

@@ -14,7 +14,7 @@ namespace MAS.AuctionManagement
 {
     public class RunAuction
     {
-        public ManageAuction ManageAuction;
+        public IManageAuction ManageAuction { get; private set; }
         private ManageAgents _manageAgents;
         private bool _timeEndFirstChance;
         private bool _timeEnd;
@@ -22,7 +22,7 @@ namespace MAS.AuctionManagement
         private ISystem _system;
         private ConsoleColor _color;
 
-        public RunAuction(ManageAuction manageAuction, ManageAgents manageAgents, ISystem system, ConsoleColor color)
+        public RunAuction(IManageAuction manageAuction, ManageAgents manageAgents, ISystem system, ConsoleColor color)
         {
             ManageAuction = manageAuction;
             _manageAgents = manageAgents;

@@ -1,4 +1,5 @@
 ﻿using AgentsProject.Interfaces;
+using MAS.Interfaces;
 using MAS.Products.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace MAS.AuctionManagement
 {
-    public class Auction
+    public class Auction : IAuction
     {
         public Guid ID { get; private set; }
         public string Name { get; private set; }
@@ -28,11 +29,5 @@ namespace MAS.AuctionManagement
             StartPrice = startPrice;
             PriceJump = priceJump;
         }
-
-     
-
-       
-
-
     }
 }

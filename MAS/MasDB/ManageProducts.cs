@@ -23,6 +23,8 @@ namespace MAS.MasDB
         {
             AllProducts.Add(new Office1());
             AllProducts.Add(new Office2());
+            AllProducts.Add(new TicketToEminem());
+            AllProducts.Add(new PopcornMachine());
         }
     }
 }

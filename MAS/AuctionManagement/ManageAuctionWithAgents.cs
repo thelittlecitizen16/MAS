@@ -9,21 +9,26 @@ using System.Threading.Tasks;
 
 namespace MAS.AuctionManagement
 {
-    public class ManageAuctionWithAgents
+    public class ManageAuctionWithAgents : IManageAuctionWithAgents
     {
-        public Auction Auction;
-        public IAgent LastAgentOffer;
-        public double LastOfferPrice;
+        public IAuction Auction { get; private set; }
+        public IAgent LastAgentOffer { get;  set; }
+        public double LastOfferPrice { get;  set; }
+
         private event Func<Guid, Tuple<double?, IAgent>> FirstOffer;
+
         private event Func<Guid, string, double, Tuple<double?, IAgent>> NewOffer;
+
         private event Func<Guid, string, double, Tuple<double?, IAgent>> LastOffer;
+
         private event Action<Guid> EndAuctionToAgent;
 
-        public ManageAuctionWithAgents(Auction auction)
+        public ManageAuctionWithAgents(IAuction auction)
         {
             Auction = auction;
             LastOfferPrice = 0;
         }
+
         public void Subscribe(IAgent agent)
         {
             SendIfWantToAddFirstOffer(agent);
