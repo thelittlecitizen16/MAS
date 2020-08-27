@@ -1,4 +1,5 @@
 ﻿using MAS.AuctionManagement;
+using MAS.Interfaces;
 using MAS.MasDB;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,12 @@ namespace MAS
         private RunAuction runAuction;
         private RunAuction runAuction2;
 
-        public ManageFewAuctions(ManageAgents manageAgents, ManageProducts manageProducts)
+        public ManageFewAuctions(ISystem system , ManageAgents manageAgents, ManageProducts manageProducts)
         {
             auctionfactory = new Auctionfactory();
 
-            runAuction = auctionfactory.CreateAuction(manageAgents, "one", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
-            runAuction2 = auctionfactory.CreateAuction(manageAgents, "two", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
+            runAuction = auctionfactory.CreateAuction(system, manageAgents, "one", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
+            runAuction2 = auctionfactory.CreateAuction(system, manageAgents, "two", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
         }
 
         public void Try()

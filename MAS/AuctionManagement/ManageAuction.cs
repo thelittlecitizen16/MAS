@@ -1,4 +1,5 @@
 ﻿using AgentsProject.Interfaces;
+using MAS.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,20 +7,22 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MAS
+namespace MAS.AuctionManagement
 {
     public class ManageAuction
     {
         public Auction Auction;
+        private ISystem _system;
         private IAgent _lastAgentOffer;
         private double _lastOfferPrice;
         private event Func<Guid,Tuple<double?, IAgent>> FirstOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> NewOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> LastOffer;
 
-        public ManageAuction(Auction auction)
+        public ManageAuction(Auction auction, ISystem system)
         {
             Auction = auction;
+            _system = system;
         }
         public void Subscribe(IAgent agent)
         {

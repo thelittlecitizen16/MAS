@@ -1,5 +1,6 @@
 ﻿using AgentsProject.Interfaces;
 using Common;
+using MAS.Interfaces;
 using MAS.MasDB;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
 
-namespace MAS
+namespace MAS.AuctionManagement
 {
     public class RunAuction
     {
@@ -18,11 +19,13 @@ namespace MAS
         private bool _timeEnd;
         private bool _timeEndLastChance;
         private AuctionDeatiels _auctionDeatiels;
+        private ISystem _system;
 
-        public RunAuction(ManageAuction manageAuction, ManageAgents manageAgents)
+        public RunAuction(ManageAuction manageAuction, ManageAgents manageAgents, ISystem system)
         {
             ManageAuction = manageAuction;
             _manageAgents = manageAgents;
+            _system = system;
             _timeEnd = false;
             _timeEndLastChance = false;
             _auctionDeatiels = new AuctionDeatiels(ManageAuction.Auction.Name, ManageAuction.Auction.StartPrice, ManageAuction.Auction.PriceJump);
@@ -141,7 +144,7 @@ namespace MAS
                     {
                         if (ManageAuction.IsJumpOk(result.Item1.Value))
                         {
-                            Console.WriteLine($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value} in aucction {ManageAuction.Auction.ID}");
+                            _system.Write($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value} in aucction {ManageAuction.Auction.ID}");
                         }
                     }
                 }
