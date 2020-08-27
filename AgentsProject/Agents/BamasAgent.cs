@@ -21,7 +21,7 @@ namespace AgentsProject.Agents
             AuctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
             _algorithm = new RandomAlgorithm();
             Name = "Bamas Family";
-            MoneyAccount = 1000;
+            MoneyAccount = 5000;
         }
         public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
@@ -53,6 +53,7 @@ namespace AgentsProject.Agents
         {
             MoneyAccount -= priceToPay;
         }
+
         public void EndAuction(Guid auctionID)
         {
             AuctionDeatiels auctionDeatiels;

@@ -37,6 +37,7 @@ namespace MAS.AuctionManagement
         {
             List<Task> tasks = new List<Task>(); ;
             bool HaveOne = false;
+
             foreach (var agent in _manageAgents.AllAgents)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
@@ -51,13 +52,16 @@ namespace MAS.AuctionManagement
             }
 
             Task.WaitAll(tasks.ToArray());
+
             return HaveOne;
         }
+
         public void StartAuction()
         {
             string auctionName = ManageAuctionAgents.Auction.Name;
             string productName = ManageAuctionAgents.Auction.Product.Name;
             double startPrice = ManageAuctionAgents.Auction.StartPrice;
+
             _system.Write($"START NOW: auction {auctionName} the product is {productName} the start price is {startPrice}", _color);
         }
     
@@ -81,6 +85,7 @@ namespace MAS.AuctionManagement
         public void CheckOffer(List<Tuple<double?, IAgent>> allResults)
         {
             allResults = allResults.Where(r => r != null).ToList();
+
             foreach (var result in allResults)
             {
 

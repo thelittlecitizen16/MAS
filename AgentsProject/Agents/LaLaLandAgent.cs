@@ -20,7 +20,7 @@ namespace AgentsProject.Agents
             AuctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
             _algorithm = new RandomAlgorithm();
             Name = "La La Land";
-            MoneyAccount = 1000;
+            MoneyAccount = 5000;
         }
         public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
