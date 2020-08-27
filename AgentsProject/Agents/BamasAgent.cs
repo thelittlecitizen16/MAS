@@ -53,5 +53,10 @@ namespace AgentsProject.Agents
         {
             MoneyAccount -= priceToPay;
         }
+        public void EndAuction(Guid auctionID)
+        {
+            AuctionDeatiels auctionDeatiels;
+            AuctionsDeatiels.TryRemove(auctionID, out auctionDeatiels);
+        }
     }
 }

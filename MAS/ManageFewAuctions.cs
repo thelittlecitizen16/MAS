@@ -22,8 +22,8 @@ namespace MAS
         {
             auctionfactory = new Auctionfactory();
 
-            runAuction = auctionfactory.CreateAuction(system, manageAgents, "one", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
-            runAuction2 = auctionfactory.CreateAuction(system, manageAgents, "two", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
+            runAuction = auctionfactory.CreateAuction(system, manageProducts, manageAgents, "one", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
+            runAuction2 = auctionfactory.CreateAuction(system, manageProducts, manageAgents, "two", DateTime.Now.AddSeconds(10), TimeSpan.FromSeconds(1000), manageProducts.AllProducts.First(), 200, 100);
         }
 
         public void Try()
