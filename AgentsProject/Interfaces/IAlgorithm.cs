@@ -8,8 +8,8 @@ namespace AgentsProject.Interfaces
     public interface IAlgorithm
     {
         bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels);
-        double? FirstOffer(Guid auctionID);
-        double? NewOffer(Guid auctionID, string agentName, double offerPrice);
-        double? OfferLastChance(Guid auctionID, string agentName, double offerPrice);
+        double? FirstOffer(Guid auctionID, AuctionDeatiels auctionDeatiels);
+        double? NewOffer(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels);
+        double? OfferLastChance(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels);
     }
 }

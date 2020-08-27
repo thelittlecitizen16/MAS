@@ -9,36 +9,29 @@ namespace AgentsProject.Algorithms
 {
     public class BasicAlgorithm : IAlgorithm
     {
-        private ConcurrentDictionary<Guid, AuctionDeatiels> _auctionsDeatiels;
-
-        public BasicAlgorithm()
-        {
-            _auctionsDeatiels = new ConcurrentDictionary<Guid, AuctionDeatiels>();
-        }
 
         public bool EnterAuction(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
-            _auctionsDeatiels.TryAdd(auctionID, auctionDeatiels);
             return true;
         }
 
-        public double? FirstOffer(Guid auctionID)
+        public double? FirstOffer(Guid auctionID, AuctionDeatiels auctionDeatiels)
         {
-            return _auctionsDeatiels[auctionID].StartPrice + _auctionsDeatiels[auctionID].PriceJump;
+            return auctionDeatiels.StartPrice + auctionDeatiels.PriceJump;
         }
 
 
-        public double? NewOffer(Guid auctionID, string agentName, double offerPrice)
+        public double? NewOffer(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels)
         {
             if (offerPrice < 500)
             {
-                return offerPrice + _auctionsDeatiels[auctionID].PriceJump;
+                return offerPrice + auctionDeatiels.PriceJump;
             }
 
             return null;
         }
 
-        public double? OfferLastChance(Guid auctionID, string agentName, double offerPrice)
+        public double? OfferLastChance(Guid auctionID, string agentName, double offerPrice, AuctionDeatiels auctionDeatiels)
         {
             return null;
         }
