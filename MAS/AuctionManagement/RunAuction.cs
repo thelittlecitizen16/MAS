@@ -20,12 +20,14 @@ namespace MAS.AuctionManagement
         private bool _timeEndLastChance;
         private AuctionDeatiels _auctionDeatiels;
         private ISystem _system;
+        private ConsoleColor _color;
 
-        public RunAuction(ManageAuction manageAuction, ManageAgents manageAgents, ISystem system)
+        public RunAuction(ManageAuction manageAuction, ManageAgents manageAgents, ISystem system, ConsoleColor color)
         {
             ManageAuction = manageAuction;
             _manageAgents = manageAgents;
             _system = system;
+            _color = color;
             _timeEnd = false;
             _timeEndLastChance = false;
             _auctionDeatiels = new AuctionDeatiels(ManageAuction.Auction.Name, ManageAuction.Auction.StartPrice, ManageAuction.Auction.PriceJump);
@@ -144,7 +146,7 @@ namespace MAS.AuctionManagement
                     {
                         if (ManageAuction.IsJumpOk(result.Item1.Value))
                         {
-                            _system.Write($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value} in aucction {ManageAuction.Auction.ID}");
+                            _system.Write($"the agent {result.Item2.Name} add offer with the price {result.Item1.Value} in aucction {ManageAuction.Auction.ID}", _color);
                         }
                     }
                 }

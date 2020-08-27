@@ -4,7 +4,9 @@ using System.Text;
 
 namespace MAS.Interfaces
 {
-    class ISystem
+    public interface ISystem
     {
+        string ReadString();
+        void Write(string message, ConsoleColor color);
     }
 }

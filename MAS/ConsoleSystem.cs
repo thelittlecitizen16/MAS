@@ -12,8 +12,9 @@ namespace MAS
             return Console.ReadLine();
         }
 
-        public void Write(string message)
+        public void Write(string message, ConsoleColor color)
         {
+            Console.ForegroundColor = color;
             Console.WriteLine(message);
         }
     }

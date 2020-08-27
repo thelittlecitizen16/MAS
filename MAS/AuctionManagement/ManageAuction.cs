@@ -13,16 +13,18 @@ namespace MAS.AuctionManagement
     {
         public Auction Auction;
         private ISystem _system;
+        private ConsoleColor _color;
         private IAgent _lastAgentOffer;
         private double _lastOfferPrice;
         private event Func<Guid,Tuple<double?, IAgent>> FirstOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> NewOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> LastOffer;
 
-        public ManageAuction(Auction auction, ISystem system)
+        public ManageAuction(ConsoleColor color, Auction auction, ISystem system)
         {
             Auction = auction;
             _system = system;
+            _color = color;
         }
         public void Subscribe(IAgent agent)
         {
@@ -33,9 +35,7 @@ namespace MAS.AuctionManagement
 
         public void StartAuction()
         {
-            Console.WriteLine($"the auction {Auction.Name} start now-");
-            Console.WriteLine($" the product is {Auction.Product.Name} the start price is {Auction.StartPrice}");
-        }
+            _system.Write($"the auction {Auction.Name} start now- the product is {Auction.Product.Name} the start price is {Auction.StartPrice}" , _color);        }
 
         private void SendIfWantToAddFirstOffer(IAgent agent)
         {
@@ -54,13 +54,11 @@ namespace MAS.AuctionManagement
 
         public void EndAuction()
         {
-            Console.WriteLine($"SOLD for {_lastOfferPrice} - {Auction.Product.Name} ");
-            Console.WriteLine($"{_lastAgentOffer.Name} is the winner!!");
-
+            _system.Write($"{_lastAgentOffer.Name} is the winner, SOLD {Auction.Product.Name} for {_lastOfferPrice}", _color);
         }
         public void SendLastChance()
         {
-            Console.WriteLine($"{_lastAgentOffer.Name} is the last offer with price {_lastOfferPrice}");
+            _system.Write($"{_lastAgentOffer.Name} is the last offer with price {_lastOfferPrice}", _color);
         }
 
         public List<Tuple<double?, IAgent>> SendAgentIfWantToAddFirstOffer()
