@@ -15,8 +15,11 @@ namespace MAS.MasDB
             AllProducts = new List<IProduct>();
             AddAllProducts();
         }
-
-        private void AddAllProducts()
+        public void RemoveProducts(IProduct product)
+        {
+            AllProducts.Remove(product);
+        }
+        public void AddAllProducts()
         {
             AllProducts.Add(new Office1());
             AllProducts.Add(new Office2());

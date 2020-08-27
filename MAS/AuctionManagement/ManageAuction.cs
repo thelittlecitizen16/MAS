@@ -1,5 +1,6 @@
 ﻿using AgentsProject.Interfaces;
 using MAS.Interfaces;
+using MAS.MasDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,18 +17,19 @@ namespace MAS.AuctionManagement
         private ConsoleColor _color;
         private IAgent _lastAgentOffer;
         private double _lastOfferPrice;
+        private ManageProducts _manageProducts;
         private event Func<Guid,Tuple<double?, IAgent>> FirstOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> NewOffer;
         private event Func<Guid, string, double, Tuple<double?, IAgent>> LastOffer;
       //  private object Locker = new object();
 
-        public ManageAuction(ConsoleColor color, Auction auction, ISystem system)
+        public ManageAuction(ConsoleColor color, ManageProducts manageProducts, Auction auction, ISystem system)
         {
             Auction = auction;
             _system = system;
             _color = color;
+            _manageProducts = manageProducts;
             _lastOfferPrice = 0;
-
         }
         public void Subscribe(IAgent agent)
         {
@@ -63,6 +65,7 @@ namespace MAS.AuctionManagement
         {
             _lastAgentOffer.TakeMoneyWhenWin(_lastOfferPrice);
             _system.Write($"{_lastAgentOffer.Name} is the winner, SOLD {Auction.Product.Name} for {_lastOfferPrice}", _color);
+            _manageProducts.RemoveProduct(Auction.Product);
         }
         public void SendLastChance()
         {

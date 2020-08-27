@@ -16,7 +16,7 @@ namespace MAS.AuctionManagement
         }
         public RunAuction CreateAuction(ISystem system,ManageAgents manageAgents, string name, DateTime startTime, TimeSpan waitWithoutOffer, IProduct product, double startPrice, double priceJump)
         {
-            int color =rand.Next(9, 16);
+            int color =rand.Next(1, 16);
 
             Auction auction = new Auction(name, startTime, waitWithoutOffer, product, startPrice, priceJump);
             ManageAuction manageAuction = new ManageAuction((ConsoleColor)color, auction, system);
