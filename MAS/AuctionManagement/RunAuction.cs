@@ -70,7 +70,7 @@ namespace MAS
         }
         private void RunTimeAuction()
         {
-            var aTimer = new Timer(1000);
+            var aTimer = new Timer(ManageAuction.Auction.WaitWithoutOffer.TotalSeconds);
             aTimer.Elapsed += OnTimedEventOfAuction;
 
             while (!_timeEnd)
@@ -96,7 +96,7 @@ namespace MAS
         private List<Tuple<double?, IAgent>> AuctionLastChance()
         {
             ManageAuction.SendLastChance();
-            var aTimer = new Timer(1000);
+            var aTimer = new Timer(ManageAuction.Auction.WaitWithoutOffer.TotalSeconds);
             aTimer.Elapsed += OnTimedEventOfLastChance;
 
             List<Tuple<double?, IAgent>> allResults;

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MAS
+namespace MAS.AuctionManagement
 {
     public class Auction
     {
@@ -20,6 +20,7 @@ namespace MAS
         public Auction(string name, DateTime startTime, TimeSpan waitWithoutOffer, IProduct product, double startPrice, double priceJump)
         {
             ID = Guid.NewGuid();
+            StartTime = startTime;
             Name = name;
             StartPrice = startPrice;
             WaitWithoutOffer = waitWithoutOffer;
